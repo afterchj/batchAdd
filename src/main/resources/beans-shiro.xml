@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	   xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+	<bean id="shiroFilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean">
+		<property name="securityManager" ref="securityManager" />
+		<!--<property name="filterChainDefinitions">-->
+		<!--<value>-->
+		<!--#这里相当于ini配置文件中的[urls]-->
+		<!--#url=拦截器[参数]，拦截器-->
+		<!--# some example chain definitions:-->
+		<!--/admin/** = authc, roles[admin]-->
+		<!--/docs/** = authc, perms[document:read]-->
+		<!--# 当访问login时，不用进行认证（anon表示匿名）-->
+		<!--/login = anon-->
+		<!--/** = authc-->
+		<!--# more URL-to-FilterChain definitions here-->
+		<!--</value>-->
+		<!--</property>-->
+	</bean>
+	<!-- 配置securityManager -->
+	<bean id="securityManager" class="org.apache.shiro.web.mgt.DefaultWebSecurityManager">
+		<property name="realm" ref="myRealm" />
+		<!-- <property name="sessionMode" value="native"/> -->
+	</bean>
+	<!-- 生命周期 -->
+	<bean id="lifecycleBeanPostProcessor" class="org.apache.shiro.spring.LifecycleBeanPostProcessor" />
+
+	<!-- 配置Realm: -->
+	<bean id="myRealm" class="com.kd.mvc.service.MyRealm"></bean>
+
+	<!-- 启用shiro注解 -->
+	<bean class="org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator" depends-on="lifecycleBeanPostProcessor"/>
+	<bean class="org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor">
+		<property name="securityManager" ref="securityManager"/>
+	</bean>
+
+</beans>

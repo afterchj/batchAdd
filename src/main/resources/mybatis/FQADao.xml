@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kd.mvc.dao.FAQDao">
+
+    <insert id="insertBatch" parameterType="java.util.List">
+        insert ignore into boss_locker.faq(
+        id, question,
+        answer,url,
+        keyword
+        )values
+        <foreach collection="list" item="u" index="index" separator=",">
+            (
+            #{u.id}, #{u.question},
+            #{u.answer},#{u.url},
+            #{u.keyword}
+            )
+        </foreach>
+    </insert>
+
+
+    <select id="selectByKey" parameterType="map" resultType="FAQ">
+         SELECT * FROM boss_locker.faq f WHERE f.keyword like #{keyword}
+    </select>
+
+    <select id="getAllKey" resultType="string">
+        SELECT f.keyword FROM boss_locker.faq f
+    </select>
+</mapper>
